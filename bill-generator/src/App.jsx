@@ -73,7 +73,7 @@ export default function App() {
     const zone = billZoneRef.current;
     if (!zone) return;
     const compute = () => {
-      const s = Math.min(1, zone.clientWidth / 1024);
+      const s = Math.min(1, (zone.clientWidth - 6) / 1024);
       setPreviewScale(s);
     };
     compute();
@@ -291,7 +291,7 @@ export default function App() {
                 height: sheetHeight ? sheetHeight * previewScale : undefined,
                 transform: `scale(${previewScale})`,
                 transformOrigin: 'top left',
-                overflow: 'hidden',
+                overflow: 'visible',
               }}
             >
               <BillPreview bill={bill} ref={billRef} />
