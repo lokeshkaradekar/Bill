@@ -1,4 +1,6 @@
 export default function BillHeader({ fishName = 'caffis' }) {
+  const name = fishName || 'caffis';
+  const label = `Type of Fish : ${name.charAt(0).toUpperCase()}${name.slice(1)}`;
   return (
     <header className="reference-header">
       <img
@@ -6,7 +8,7 @@ export default function BillHeader({ fishName = 'caffis' }) {
         src="/assets/rkk-header.png"
         alt="RKK Fresh Fishes header"
       />
-      <div className="reference-fish-name">Fishes : {fishName || 'caffis'}</div>
+      <div className="reference-fish-name">{label}</div>
     </header>
   );
 }

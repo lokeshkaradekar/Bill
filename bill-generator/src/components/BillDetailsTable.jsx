@@ -11,8 +11,8 @@ export default function BillDetailsTable({ rows, fishName = 'caffis' }) {
           <tr>
             <th>Sl. No.</th>
             <th>Date</th>
-            <th>Fish</th>
-            <th>Fishes</th>
+            <th>Type of Fish</th>
+            <th>Fish Quantity</th>
             <th>Rate (₹)</th>
             <th className="total-cell">Total Amount (₹)</th>
           </tr>

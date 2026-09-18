@@ -60,7 +60,7 @@ export default function BillEditor({ bill, setBill }) {
         </div>
 
         <div className="editor-field">
-          <label className="editor-label">Fish</label>
+          <label className="editor-label">Type of Fish</label>
           <input
             type="text"
             className="editor-input"
@@ -121,7 +121,7 @@ export default function BillEditor({ bill, setBill }) {
                 </div>
                 <div className="entry-grid">
                   <div className="entry-field">
-                    <label className="entry-label">Fish</label>
+                    <label className="entry-label">Type of Fish</label>
                     <input
                       type="text"
                       className="editor-input"
@@ -141,7 +141,7 @@ export default function BillEditor({ bill, setBill }) {
                     />
                   </div>
                   <div className="entry-field">
-                    <label className="entry-label">Quantity</label>
+                    <label className="entry-label">Fish Quantity</label>
                     <input
                       type="text"
                       inputMode="decimal"
