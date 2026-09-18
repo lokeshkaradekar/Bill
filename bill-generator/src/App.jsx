@@ -19,7 +19,7 @@ import {
   exportBillAsPng,
   downloadPng,
   downloadPdf,
-  sharePngOnWhatsApp,
+  shareBillImage,
   printBill,
   makePngFilename,
 } from './utils/exportUtils.js';
@@ -86,6 +86,10 @@ export default function App() {
     if (billRef.current) setSheetHeight(billRef.current.offsetHeight);
   }, [bill, previewScale]);
 
+  useEffect(() => {
+    window.shareBillImage = () => shareBillImage(billRef.current);
+  }, []);
+
   const showToast = (msg) => {
     setToast(msg);
     setTimeout(() => setToast(''), 3000);
@@ -137,9 +141,13 @@ export default function App() {
     setBusy('whatsapp');
     try {
       await new Promise((r) => setTimeout(r, 50));
-      const result = await sharePngOnWhatsApp(billRef.current);
+      const result = await shareBillImage(billRef.current);
       if (result.success) {
-        showToast('Opening share sheet — choose WhatsApp.');
+        showToast(
+          result.method === 'android'
+            ? 'Opening Android share sheet — choose WhatsApp.'
+            : 'Opening share sheet — choose WhatsApp.'
+        );
       } else if (result.canceled) {
         showToast('Share cancelled.');
       } else {

@@ -58,9 +58,24 @@ export async function getBillImageBlob(nodeRef) {
   return blob;
 }
 
-export async function sharePngOnWhatsApp(nodeRef, filename = 'RKK-Fish-Bill.png') {
+export function isAndroidWebView() {
+  return (
+    typeof window !== 'undefined' &&
+    window.Android &&
+    typeof window.Android === 'object'
+  );
+}
+
+export function hasAndroidImageShare() {
+  return (
+    isAndroidWebView() &&
+    typeof window.Android.shareImage === 'function'
+  );
+}
+
+async function sharePngDataUrlOnWeb(dataUrl, filename = 'RKK-Fish-Bill.png') {
   try {
-    const blob = await getBillImageBlob(nodeRef);
+    const blob = await (await fetch(dataUrl)).blob();
     const file = new File([blob], filename, { type: 'image/png' });
     const shareData = {
       files: [file],
@@ -81,6 +96,22 @@ export async function sharePngOnWhatsApp(nodeRef, filename = 'RKK-Fish-Bill.png'
     }
     return { success: false, method: 'error', error: err.message };
   }
+}
+
+export async function shareBillImage(nodeRef, filename = 'RKK-Fish-Bill.png') {
+  if (!nodeRef) throw new Error('Bill element not found');
+  const dataUrl = await exportBillAsPng(nodeRef);
+
+  if (hasAndroidImageShare()) {
+    window.Android.shareImage(dataUrl);
+    return { success: true, method: 'android' };
+  }
+
+  return sharePngDataUrlOnWeb(dataUrl, filename);
+}
+
+export async function sharePngOnWhatsApp(nodeRef, filename = 'RKK-Fish-Bill.png') {
+  return shareBillImage(nodeRef, filename);
 }
 
 export async function printBill(billRef) {
