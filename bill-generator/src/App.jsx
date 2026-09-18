@@ -34,7 +34,6 @@ function loadSavedData() {
     if (parsed && Array.isArray(parsed.rows)) {
       return {
         ...parsed,
-        fishName: parsed.fishName || 'caffis',
         oldBalance: parsed.oldBalance ?? '',
         amountPaid: parsed.amountPaid ?? '',
         showAmountPaid: parsed.showAmountPaid !== false,
@@ -59,14 +58,20 @@ export default function App() {
   const [sheetHeight, setSheetHeight] = useState(0);
   const [toast, setToast] = useState('');
   const [busy, setBusy] = useState('');
+  const saveTimerRef = useRef(null);
 
   useEffect(() => {
-    const t = setTimeout(() => {
+    saveTimerRef.current = setTimeout(() => {
       try {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(bill));
       } catch {}
     }, 300);
-    return () => clearTimeout(t);
+    return () => {
+      if (saveTimerRef.current) {
+        clearTimeout(saveTimerRef.current);
+        saveTimerRef.current = null;
+      }
+    };
   }, [bill]);
 
   useEffect(() => {
@@ -200,14 +205,41 @@ export default function App() {
   };
 
   const handleNewBill = () => {
-    const confirmed = window.confirm(
-      'Create a new bill? Current bill data will be cleared.'
-    );
-    if (!confirmed) return;
-    setBill(generateDefaultData());
-    setMobilePreview(false);
-    showToast('New bill created.');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    try {
+      if (saveTimerRef.current) {
+        clearTimeout(saveTimerRef.current);
+        saveTimerRef.current = null;
+      }
+
+      const newBill = generateDefaultData();
+
+      // Replace the current bill completely
+      setBill(newBill);
+
+      // Close mobile preview and clear any active operation
+      setMobilePreview(false);
+      setBusy('');
+
+      // Guarantee the fresh bill is persisted synchronously so the old
+      // bill can never be restored on reload.
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(newBill));
+      } catch {}
+
+      // Show confirmation
+      showToast('New bill created.');
+
+      // Go to top
+      try {
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth',
+        });
+      } catch {}
+    } catch (err) {
+      console.error('New Bill error:', err);
+      showToast('Could not create a new bill.');
+    }
   };
 
   return (

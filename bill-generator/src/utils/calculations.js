@@ -30,19 +30,19 @@ export function calculateGrandTotal(subtotal, oldBalance) {
 
 export function generateDefaultData() {
   return {
-    billTo: 'RKK',
-    fishName: 'caffis',
-    billNumber: '0',
+    billTo: '',
+    fishName: '',
+    billNumber: '',
     date: new Date().toLocaleDateString('en-IN', {
       day: '2-digit',
       month: '2-digit',
       year: 'numeric',
     }),
     rows: [
-      { id: 1, date: '', quantity: '0', rate: '0' },
+      { id: 1, date: '', quantity: '', rate: '' },
     ],
-    oldBalance: '0',
-    amountPaid: '0',
+    oldBalance: '',
+    amountPaid: '',
     showAmountPaid: true,
   };
 }

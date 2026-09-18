@@ -1,3 +1,5 @@
+import wavesArt from '../assets/rkk-footer-waves.png?inline';
+
 export default function BillFooter({ showAmountPaid = true, amountPaid = '₹0.00', amountWords = '' }) {
   return (
     <footer className="reference-footer">
@@ -36,7 +38,7 @@ export default function BillFooter({ showAmountPaid = true, amountPaid = '₹0.0
         </div>
       )}
       <div className="footer-wave-art">
-        <img src="./assets/rkk-footer-waves.png" alt="" />
+        <img src={wavesArt} alt="" />
       </div>
       <div className="footer-contact-bar">
         <span>⌖ <b>Place:</b> Kumta</span>

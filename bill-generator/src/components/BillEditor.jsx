@@ -20,7 +20,7 @@ export default function BillEditor({ bill, setBill }) {
         prev.rows.reduce((max, r) => Math.max(max, r.id), 0) + 1;
       return {
         ...prev,
-        rows: [...prev.rows, { id: nextId, date: '', quantity: '0', rate: '0' }],
+        rows: [...prev.rows, { id: nextId, date: '', quantity: '', rate: '' }],
       };
     });
   };

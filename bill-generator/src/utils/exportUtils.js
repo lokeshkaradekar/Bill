@@ -5,7 +5,7 @@ export async function exportBillAsPng(nodeRef, filename = 'bill') {
   if (!nodeRef) throw new Error('Bill element not found');
   const options = {
     pixelRatio: 2,
-    cacheBust: true,
+    cacheBust: false,
     backgroundColor: '#ffffff',
     width: nodeRef.offsetWidth,
     height: nodeRef.offsetHeight,
@@ -21,6 +21,14 @@ export async function exportBillAsPng(nodeRef, filename = 'bill') {
 }
 
 export function downloadPng(dataUrl, filename = 'RKK-Fish-Bill.png') {
+  if (
+    typeof window !== 'undefined' &&
+    window.Android &&
+    typeof window.Android.downloadImage === 'function'
+  ) {
+    window.Android.downloadImage(dataUrl, filename);
+    return;
+  }
   const link = document.createElement('a');
   link.download = filename;
   link.href = dataUrl;
@@ -117,6 +125,14 @@ export async function sharePngOnWhatsApp(nodeRef, filename = 'RKK-Fish-Bill.png'
 export async function printBill(billRef) {
   if (!billRef) return;
   const dataUrl = await exportBillAsPng(billRef);
+  if (
+    typeof window !== 'undefined' &&
+    window.Android &&
+    typeof window.Android.printBill === 'function'
+  ) {
+    window.Android.printBill(dataUrl);
+    return;
+  }
   const printWindow = window.open('', '_blank', 'width=960,height=1360');
   if (!printWindow) {
     window.print();
