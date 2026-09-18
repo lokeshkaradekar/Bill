@@ -36,7 +36,7 @@ export default function BillFooter({ showAmountPaid = true, amountPaid = '₹0.0
         </div>
       )}
       <div className="footer-wave-art">
-        <img src="/assets/rkk-footer-waves.png" alt="" />
+        <img src="./assets/rkk-footer-waves.png" alt="" />
       </div>
       <div className="footer-contact-bar">
         <span>⌖ <b>Place:</b> Kumta</span>
