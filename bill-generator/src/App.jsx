@@ -54,6 +54,9 @@ export default function App() {
   const [bill, setBill] = useState(() => loadSavedData() || generateDefaultData());
   const [mobilePreview, setMobilePreview] = useState(false);
   const billRef = useRef(null);
+  const billZoneRef = useRef(null);
+  const [previewScale, setPreviewScale] = useState(1);
+  const [sheetHeight, setSheetHeight] = useState(0);
   const [toast, setToast] = useState('');
   const [busy, setBusy] = useState('');
 
@@ -65,6 +68,23 @@ export default function App() {
     }, 300);
     return () => clearTimeout(t);
   }, [bill]);
+
+  useEffect(() => {
+    const zone = billZoneRef.current;
+    if (!zone) return;
+    const compute = () => {
+      const s = Math.min(1, zone.clientWidth / 1024);
+      setPreviewScale(s);
+    };
+    compute();
+    const ro = new ResizeObserver(compute);
+    ro.observe(zone);
+    return () => ro.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (billRef.current) setSheetHeight(billRef.current.offsetHeight);
+  }, [bill, previewScale]);
 
   const showToast = (msg) => {
     setToast(msg);
@@ -263,8 +283,17 @@ export default function App() {
           </button>
         </div>
         <div className="col col-bill">
-          <div className="bill-zone">
-            <div className="bill-canvas">
+          <div className="bill-zone" ref={billZoneRef}>
+            <div
+              className="bill-canvas"
+              style={{
+                width: 1024 * previewScale,
+                height: sheetHeight ? sheetHeight * previewScale : undefined,
+                transform: `scale(${previewScale})`,
+                transformOrigin: 'top left',
+                overflow: 'hidden',
+              }}
+            >
               <BillPreview bill={bill} ref={billRef} />
             </div>
           </div>
